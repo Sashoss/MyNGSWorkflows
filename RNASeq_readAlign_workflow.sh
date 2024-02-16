@@ -25,3 +25,7 @@ hisat2 -x Reference/GRCH38 -p 16 --no-discordant -1 R1.fastq.gz -2 R2.fastq.gz  
 
 samtools index -@ 16 aligned_bams/aligned.bam
 
+java -jar picard.jar MarkDuplicates --INPUT aligned_bams/aligned.bam --OUTPUT aligned_bams/duplicates_removed.bam --METRICS_FILE metrics.out --REMOVE_DUPLICATES true
+samtools index aligned_bams/duplicates_removed.bam
+
+featureCounts -T 12 -O -t gene_id -g ID -a data/gencode.v38.annotation.gtf/gencode.v38.annotation.gtf -o counts.txt aligned_bams/duplicates_removed.bam
